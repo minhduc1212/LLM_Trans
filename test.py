@@ -18,7 +18,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # ─────────────────────────────────────────────
 # CONFIG
 # ─────────────────────────────────────────────
-MODEL        = "gemma4:e4b"          # Đổi thành "gemma4:e4b" nếu bạn dùng bản đó
+MODEL        = "gemma4:e4b"          
 CHUNK_SIZE   = 1200                 # Số ký tự tối đa mỗi chunk (tránh vượt context)
 MAX_WORKERS  = 2                    # Số luồng song song (tăng nếu RAM > 16GB)
 TEMPERATURE  = 0.25                 # Thấp hơn = sát nghĩa hơn, ít "sáng tạo" hơn
