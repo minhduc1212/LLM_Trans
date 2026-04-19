@@ -43,3 +43,6 @@ inside what amounts to a high-tech shipping crate, but the restraints are for a 
 and removing them by yourself is a breeze. They're snugly attached to the sides of the torpor \
 chamber, keeping me suspended in the middle of the container while I'm unconscious so that \
 I don't float into the sides. This is far preferable to waking up with bruises all over.
+
+
+prompt in small still best to use: literal, use suitable word, "Nếu gặp thuật ngữ khó, hãy tự linh hoạt dịch sang cụm từ tiếng Việt tương đương nhất, không cần giữ nguyên từ gốc, dựa trên ngữ cảnh, bối cảnh tiểu thuyết. Ví dụ: "torpor" có thể dịch là "ngủ đông", "protocol" có thể dịch là "quy trình"." -> hoặc giữ nguyên từ gốc nếu không có từ tương đương, nhưng phải đảm bảo tính mạch lạc và tự nhiên của ngôn ngữ đích. + chú thích giải thích từ gốc đó 
