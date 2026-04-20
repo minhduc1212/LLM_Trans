@@ -45,4 +45,31 @@ chamber, keeping me suspended in the middle of the container while I'm unconscio
 I don't float into the sides. This is far preferable to waking up with bruises all over.
 
 
-prompt in small still best to use: literal, use suitable word, "Nếu gặp thuật ngữ khó, hãy tự linh hoạt dịch sang cụm từ tiếng Việt tương đương nhất, không cần giữ nguyên từ gốc, dựa trên ngữ cảnh, bối cảnh tiểu thuyết. Ví dụ: "torpor" có thể dịch là "ngủ đông", "protocol" có thể dịch là "quy trình"." -> hoặc giữ nguyên từ gốc nếu không có từ tương đương, nhưng phải đảm bảo tính mạch lạc và tự nhiên của ngôn ngữ đích. + chú thích giải thích từ gốc đó 
+tăng chunk lên 2500 token để giảm số lần phải chia nhỏ văn bản, giúp duy trì tính mạch lạc và tự nhiên của ngôn ngữ đích hơn.
+
+Giữ đúng cấu trúc đoạn văn bản gốc, 
+
+Không thêm *hoặc* hoặc các ký tự đặc biệt khác vào đoạn dịch, trừ khi chúng xuất hiện trong văn bản gốc.
+
+prompt in small still best to use: literal, use suitable word, "Nếu gặp thuật ngữ khó, hãy tự linh hoạt dịch sang cụm từ tiếng Việt tương đương nhất, không cần giữ nguyên từ gốc, dựa trên ngữ cảnh, bối cảnh tiểu thuyết. Ví dụ: "torpor" có thể dịch là "ngủ đông", "protocol" có thể dịch là "quy trình"." -> hoặc giữ nguyên từ gốc nếu không có từ tương đương, nhưng phải đảm bảo tính mạch lạc và tự nhiên của ngôn ngữ đích.  + chú thích giải thích từ gốc đó. Ví dụ Somaforming (biến đổi cơ thể). => muốn để dịch từ khó đúng nghĩa -> có ngữ cảnh, bối cảnh tóm tắt nội dung đoạn truyện -> cho vào prompt đoạn sau 
+
+-> lưu glossarry để giải thích các thuật ngữ khó, giúp người đọc hiểu rõ hơn về bối cảnh và nội dung của truyện. + đồng bộ cho lần dịch sau, nếu gặp lại thuật ngữ đó thì sẽ dịch theo cách đã giải thích trong glossary.
+
+lưu cách xưng hô, cách gọi nhân vật, để đảm bảo sự nhất quán trong suốt quá trình dịch -> nếu ngữ cảnh thay đổi -> thay đổi theo
+
+tóm tắt nội dung đoạn truyện -> cho vào prompt đoạn sau
+
+chia thành các phần nhỏ hơn (chunk) để dịch, mỗi phần khoảng 1000 token, đảm bảo tính mạch lạc và tự nhiên của ngôn ngữ đích.
+
+checkpointing: lưu lại tiến trình dịch sau mỗi chunk, để có thể tiếp tục từ điểm dừng nếu có sự cố (như mất điện hoặc Ctrl+C). File checkpoint sẽ tự động xóa khi hoàn thành.
+
+Dịch song song
+
+dịch theo phong cách của các thể loại(vì các thể loại sẽ có thuật ngữ riêng cho nó)
+
+chia các config, prompt, glossary, checkpointing thành các file riêng biệt để dễ quản lý và tái sử dụng cho các dự án dịch khác nhau.
+
+testing v2: xem lại phần chia chunk vì câu nếu không có dấu . thì sẽ bị miss ví dụ "第2068章 联手营救"
+            -> xem cách tăng tốc độ dịch
+            tự điều chỉnh văn phong theo ý thích
+            điều chỉnh prompt = gemini

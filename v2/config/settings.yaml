@@ -1,0 +1,19 @@
+features:
+  auto_glossary: true
+  auto_summary: true
+  clean_thinking_tags: true
+model:
+  name: gemma4:e4b
+  num_ctx: 8192
+  repeat_penalty: 1.1
+  temperature: 0.25
+  top_p: 0.9
+paths:
+  checkpoint_dir: checkpoints
+  data_dir: data
+  output_dir: output
+translation:
+  chunk_size: 2500
+  genre: default
+  max_workers: 2
+  target_language: vi

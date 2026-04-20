@@ -1,0 +1,76 @@
+# ============================================================
+# GENRE STYLES - Style hint injected into each prompt
+# Keep SHORT (< 30 tokens each) for Gemma4 efficiency
+# ============================================================
+
+genres:
+  default:
+    label: "Mặc định"
+    hint: "Dịch sát nghĩa, đúng ngữ cảnh, dễ hiểu, giữ văn phong tác giả, đúng cấu trúc ngữ pháp tiếng Việt. Không thêm thắt."
+    term_categories: []
+
+  scifi:
+    label: "Khoa học viễn tưởng"
+    hint: "Ưu tiên thuật ngữ kỹ thuật chính xác. Văn phong lạnh, khoa học, súc tích."
+    term_categories: ["công nghệ", "sinh học", "vũ trụ", "AI", "vật lý"]
+
+  fantasy:
+    label: "Fantasy / Huyền ảo"
+    hint: "Giữ sắc thái huyền bí, cổ điển. Thuật ngữ phép thuật, sinh vật, thế giới quan."
+    term_categories: ["phép thuật", "sinh vật", "địa danh", "danh hiệu"]
+
+  romance:
+    label: "Lãng mạn"
+    hint: "Văn phong mượt mà, cảm xúc, tinh tế. Chú ý sắc thái tình cảm."
+    term_categories: ["cảm xúc", "mối quan hệ", "địa điểm lãng mạn"]
+
+  thriller:
+    label: "Thriller / Hồi hộp"
+    hint: "Nhịp nhanh, căng thẳng, súc tích. Câu ngắn. Không dài dòng."
+    term_categories: ["vũ khí", "tổ chức", "địa điểm", "thủ thuật"]
+
+  historical:
+    label: "Lịch sử"
+    hint: "Văn phong trang trọng, cổ điển. Thuật ngữ thời đại phù hợp. Danh xưng lịch sử."
+    term_categories: ["chức quan", "địa danh cổ", "phong tục", "vũ khí cổ"]
+
+  horror:
+    label: "Kinh dị"
+    hint: "Bầu không khí u ám, rùng rợn. Dùng từ gợi sợ hãi, ghê tởm. Nhịp chậm rãi đáng sợ."
+    term_categories: ["sinh vật", "nghi lễ", "địa điểm", "hiện tượng siêu nhiên"]
+
+  xianxia:
+    label: "Tiên hiệp / Huyền huyễn"
+    hint: "Giữ nguyên thuật ngữ tu luyện, cảnh giới, công pháp. Văn phong cao ngạo, bay bổng."
+    term_categories: ["cảnh giới", "công pháp", "linh khí", "môn phái", "bảo vật"]
+
+  wuxia:
+    label: "Võ hiệp"
+    hint: "Thuật ngữ võ thuật, giang hồ. Văn phong trượng nghĩa, hào sảng."
+    term_categories: ["võ công", "môn phái", "binh khí", "giang hồ"]
+
+  isekai:
+    label: "Isekai / Chuyển sinh"
+    hint: "Hệ thống game, chỉ số, kỹ năng. Giữ tinh thần nhẹ nhàng hoặc nghiêm túc theo ngữ cảnh."
+    term_categories: ["kỹ năng", "cấp độ", "chỉ số", "hệ thống", "lớp nhân vật"]
+
+# Target language configs
+languages:
+  vi:
+    name: "Tiếng Việt"
+    instruction: "Dịch sang tiếng Việt. Xưng hô tự nhiên theo văn hóa Việt."
+  zh:
+    name: "中文 (简体)"
+    instruction: "翻译成简体中文。保持自然流畅的表达。"
+  en:
+    name: "English"
+    instruction: "Translate to natural English. Match the author's register and tone."
+  ja:
+    name: "日本語"
+    instruction: "日本語に翻訳する。自然で流暢な文体を保つ。"
+  ko:
+    name: "한국어"
+    instruction: "한국어로 번역하세요. 자연스러운 문체를 유지하세요."
+  id:
+    name: "Bahasa Indonesia"
+    instruction: "Terjemahkan ke Bahasa Indonesia yang natural dan mengalir."

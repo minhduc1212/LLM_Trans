@@ -1,0 +1,58 @@
+# Glossary Report - test
+Genre: Mặc định
+Last updated: 2026-04-20T23:48:16.357984
+
+## Thuật ngữ (46 terms)
+- **Cetus probe** → Tàu thăm dò Cetus
+- **bacteria-laden samples** → các mẫu vật mang vi khuẩn
+- **Europa’s geysers** → các mạch nước phun của Europa
+- **fossil arthropods** → bộ xương côn trùng hóa thạch
+- **mission controls** → phòng điều khiển nhiệm vụ
+- **real time** → thời gian thực
+- **induced unconsciousness** → bất tỉnh nhân tạo
+- **space-travelling crews** → phi hành đoàn du hành vũ trụ
+- **systems check** → kiểm tra hệ thống
+- **crew** → phi hành đoàn
+- **Eridania 8 mission to Mars** → nhiệm vụ Eridania 8 đến Mars
+- **Ceres** → Ceres
+- **field training** → huấn luyện thực địa
+- **sample jars** → lọ mẫu vật
+- **spectrum of gravity** → phổ trọng lực
+- **point-six-G** → mức 0,6-G
+- **atmosphere** → bầu khí quyển
+- **airlock** → cửa áp suất
+- **red-light spectrum** → phổ ánh sáng đỏ
+- **clean lab** → Phòng thí nghiệm sạch sẽ
+- **radiation** → bức xạ
+- **seedlings** → gieo hạt
+- **vents** → mạch thông hơi
+- **suits** → bộ đồ bảo hộ
+- **modules** → mô-đun
+- **trellis** → giàn leo
+- **Landing** → Hạ cánh
+- **Caffeine** → Caffeine
+- **sample** → mẫu vật
+- **baseline profile** → hồ sơ cơ bản
+- **fluorescent red** → màu đỏ huỳnh quang
+- **autonomous movement** → chuyển động tự chủ
+- **protocol** → quy trình
+- **onboard recording equipment** → thiết bị ghi hình trên tàu
+- **specimens** → mẫu vật
+- **creature** → sinh vật
+- **camera trap** → Bẫy camera
+- **ecological survey toolbox** → bộ công cụ khảo sát sinh thái
+- **species** → loài
+- **Merian** → tàu Merian
+- **chambers or pods** → khoang hay các buồng
+- **otherworldly skin** → làn da ngoài hành
+- **landing legs** → chân hạ cánh
+- **deployment** → triển khai
+- **collect steam from the vents** → thu thập hơi nước từ các mạch thông hơi
+- **sketch board** → bảng phác thảo
+
+## Nhân vật (5 characters)
+- **Cetus**: Cetus | Tàu thăm dò | Nó
+- **Europa**: Europa | Mặt trăng | Nó
+- **Mars**: Mars | Hành tinh | Nó
+- **Tarter**: Tarter | Kính thiên văn | Nó
+- **Saturn**: Saturn | Hành tinh | Nó

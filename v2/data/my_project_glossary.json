@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "project": "my_project",
+    "genre": "Khoa học viễn tưởng",
+    "created_at": "2026-04-20T08:53:10.106850",
+    "last_updated": "2026-04-20T16:59:04.369377"
+  },
+  "terms": {
+    "法力": "pháp lực",
+    "神识": "thần thức",
+    "白骨骷髅": "bộ xương khô",
+    "通玄真君": "Thông Huyền Chân Quân",
+    "魔像": "Ma tượng",
+    "葬天帝": "Táng Thiên Đế",
+    "黑海": "Hắc Hải",
+    "四圣": "Tứ Thánh",
+    "三才九绝阵": "Tam Tài Cửu Tuyệt Trận",
+    "丹田": "Đan Điền",
+    "元神": "Nguyên Thần",
+    "真灵": "Chân Linh",
+    "化劫老祖": "Hóa Kiếp Lão Tổ",
+    "托天魔像": "Tháp Thiên Ma Tượng",
+    "虚空": "hư không",
+    "剑光": "kiếm quang",
+    "结界": "kết giới",
+    "阵": "trận",
+    "防御结界": "kết giới phòng ngự",
+    "Cetus probe": "Thiết bị thăm dò Cetus",
+    "bacteria-laden samples": "mẫu vật mang vi khuẩn",
+    "Europa’s geysers": "mạch nước nóng của Europa",
+    "rover photographs": "bức ảnh của xe tự hành",
+    "fossil arthropods": "bộ xương khớp hóa thạch",
+    "galactic desert": "sa mạc thiên hà",
+    "mission controls": "phòng điều khiển nhiệm vụ",
+    "research labs": "phòng thí nghiệm nghiên cứu",
+    "Merian": "tàu Merian",
+    "space-travelling crews": "các đội thám hiểm không gian",
+    "induced unconsciousness": "bất tỉnh được kích thích",
+    "pods": "khoang"
+  },
+  "characters": {
+    "Tôi (Người kể chuyện)": "Người kể chuyện, người đang hồi tưởng về lịch sử khám phá vũ trụ.",
+    "Cha mẹ tôi": "Cha mẹ của người kể chuyện.",
+    "Đồng nghiệp (colleagues)": "Những người cùng làm việc với người kể chuyện, những người có thể tuyên bố mình có nguồn cảm hứng trở thành phi hành gia.",
+    "Nhân loại (Humans)": "Loài người nói chung, được mô tả là thích nghi."
+  }
+}
