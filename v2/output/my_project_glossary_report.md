@@ -1,0 +1,109 @@
+# Glossary Report - my_project
+Genre: Khoa học viễn tưởng
+Last updated: 2026-06-09T10:03:19.075782
+
+## Thuật ngữ (89 terms)
+- **法力** → pháp lực
+- **神识** → thần thức
+- **白骨骷髅** → bộ xương khô
+- **通玄真君** → Thông Huyền Chân Quân
+- **魔像** → Ma tượng
+- **葬天帝** → Táng Thiên Đế
+- **黑海** → Hắc Hải
+- **四圣** → Tứ Thánh
+- **三才九绝阵** → Tam Tài Cửu Tuyệt Trận
+- **丹田** → Đan Điền
+- **元神** → Nguyên Thần
+- **真灵** → Chân Linh
+- **化劫老祖** → Hóa Kiếp Lão Tổ
+- **托天魔像** → Tháp Thiên Ma Tượng
+- **虚空** → hư không
+- **剑光** → kiếm quang
+- **结界** → kết giới
+- **阵** → trận
+- **防御结界** → kết giới phòng ngự
+- **Cetus probe** → Thiết bị thăm dò Cetus
+- **bacteria-laden samples** → mẫu vật mang vi khuẩn
+- **Europa’s geysers** → mạch nước nóng của Europa
+- **rover photographs** → bức ảnh của xe tự hành
+- **fossil arthropods** → bộ xương khớp hóa thạch
+- **galactic desert** → sa mạc thiên hà
+- **mission controls** → phòng điều khiển nhiệm vụ
+- **research labs** → phòng thí nghiệm nghiên cứu
+- **Merian** → tàu Merian
+- **space-travelling crews** → các đội thám hiểm không gian
+- **induced unconsciousness** → bất tỉnh được kích thích
+- **pods** → khoang
+- **Tarter space telescope** → kính thiên văn không gian Tarter
+- **habitable exoplanet** → hành tinh ngoài hệ Mặt Trời có thể cư trú
+- **metamorphosis** → sự biến thái
+- **Aecor** → Aecor
+- **somaforming** → biến đổi cơ thể
+- **enzyme patch** → miếng dán enzyme
+- **synthetic reflectin** → reflectin tổng hợp
+- **astroglitter** → ánh kim vũ trụ
+- **catheters** → ống thông tiểu
+- **Great Shift** → Cuộc Chuyển dịch Lớn
+- **Open Cluster Astronautics** → Hàng không Vũ trụ Cụm Mở
+- **citizen-funded** → do công dân tài trợ
+- **moonshot** → bước nhảy vọt táo bạo
+- **TEVA suits** → bộ đồ TEVA (Hoạt động Ngoài Tàu trên Mặt đất)
+- **EVA suits** → bộ đồ EVA (Hoạt động Ngoài Tàu)
+- **New Millennium Lunar Base** → Căn cứ Mặt Trăng Thiên Niên Kỷ Mới
+- **red-light spectrum** → quang phổ ánh sáng đỏ
+- **lava field** → cánh đồng dung nham
+- **airlock** → cửa khoá khí
+- **habitat module** → mô-đun cư trú
+- **brine** → nước muối đậm đặc
+- **auger** → máy khoan xoắn
+- **pH probes** → đầu dò pH
+- **turbidity tubes** → ống đo độ đục
+- **core samplers** → máy lấy mẫu lõi
+- **wildlife blinds** → lều ngụy trang quan sát động vật
+- **bucket brigade** → chuỗi người truyền tay
+- **clean lab** → phòng lab sạch
+- **grow lights** → đèn tăng trưởng
+- **fast-growing spinach** → cải bó xôi tăng trưởng nhanh
+- **baseline profile** → hồ sơ chỉ số cơ bản
+- **trichromatic sight** → thị giác tam sắc
+- **inherited predisposition** → khuynh hướng di truyền
+- **second puberty** → dậy thì lần hai
+- **fractured malleolus** → gãy mắt cá chân
+- **news bundle** → gói tin tức
+- **linguistic drift** → sự biến đổi ngôn ngữ
+- **broken levies** → đê điều bị vỡ
+- **Annelid Approximate** → Xấp xỉ Giun đốt
+- **Cnidarian Approximate** → Xấp xỉ Động vật Ruột khoang
+- **New Phyla** → Ngành mới
+- **Avian Reptile Approximate** → Xấp xỉ Bò sát Chim
+- **Amphibian Approximate** → Xấp xỉ Lưỡng cư
+- **Mammal Approximate** → Xấp xỉ Động vật Có vú
+- **camera traps** → bẫy camera
+- **inconclusive** → chưa kết luận
+- **categorical bickering** → tranh cãi về phân loại
+- **menagerie** → bộ sưu tập
+- **biological quarry** → đối tượng sinh học cần tìm
+- **propulsion** → phương thức di chuyển
+- **sedentary migration** → di cư thụ động
+- **convection currents** → dòng đối lưu
+- **geothermic lullaby** → bản hát ru địa nhiệt
+- **growth medium** → môi trường nuôi cấy
+- **Europa** → Europa
+- **Mars** → Sao Hỏa
+- **Fraser river** → sông Fraser
+- **torpor** → trạng thái ngủ đông
+
+## Nhân vật (13 characters)
+- **Tôi (Người kể chuyện)**: Người kể chuyện, người đang hồi tưởng về lịch sử khám phá vũ trụ.
+- **Cha mẹ tôi**: Cha mẹ của người kể chuyện.
+- **Đồng nghiệp (colleagues)**: Những người cùng làm việc với người kể chuyện, những người có thể tuyên bố mình có nguồn cảm hứng trở thành phi hành gia.
+- **Nhân loại (Humans)**: Loài người nói chung, được mô tả là thích nghi.
+- **Ariadne**: Ariadne | Phi hành gia, người kể chuyện | tôi / cô
+- **Chikondi**: Chikondi | Thành viên phi hành đoàn | Anh/Tôi (tùy ngữ cảnh), xưng hô thân mật
+- **Elena**: Elena | Phi hành gia kỳ cựu | Cô/Tôi (tùy ngữ cảnh)
+- **Jack**: Jack | Thành viên phi hành đoàn | Anh/Tôi (tùy ngữ cảnh)
+- **Amado Guinto**: Amado Guinto | Chuyên viên truyền thông của OCA PNW | Anh/Tôi (trong video)
+- **O’Neill**: O’Neill | Kỹ sư bay | Anh/Tôi (tùy ngữ cảnh)
+- **Tubuspiscis quesadae**: Tên loài sinh vật | Sinh vật trên Aecor | N/A
+- **Doliopiscis aecorii**: Tên loài sinh vật | Sinh vật trên Aecor | N/A
+- **Pigertapete aecorii**: Tên loài sinh vật | Sinh vật trên Aecor | N/A

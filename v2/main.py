@@ -64,7 +64,7 @@ def parse_args():
     )
     parser.add_argument(
         '-m', '--model', default=None,
-        help='Ollama model name (overrides config)',
+        help='Google GenAI model name (overrides config)',
     )
     parser.add_argument(
         '-o', '--output', default=None,

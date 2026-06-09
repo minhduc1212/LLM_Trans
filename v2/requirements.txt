@@ -1,2 +1,2 @@
-ollama>=0.2.0
+google-genai
 pyyaml>=6.0

@@ -1,6 +1,6 @@
 # 📚 Novel Translator Pipeline
 
-Dịch tiểu thuyết đa ngôn ngữ, đa thể loại với Ollama (Gemma4, DeepSeek, v.v.)
+Dịch tiểu thuyết đa ngôn ngữ, đa thể loại sử dụng Google GenAI API (Gemma 4 31B IT, v.v.)
 
 ---
 
@@ -48,8 +48,11 @@ novel_translator/
 
 ```bash
 pip install -r requirements.txt
-# Đảm bảo Ollama đang chạy
-ollama pull gemma4:e4b
+# Cấu hình API Key
+# Windows (PowerShell):
+$env:GEMINI_API_KEY="your_api_key_here"
+# Linux/macOS:
+export GEMINI_API_KEY="your_api_key_here"
 ```
 
 ---
@@ -81,9 +84,9 @@ python main.py --status -p my_project
 python main.py novel.txt -p my_project -g literary -l zh
 ```
 
-### Dùng model khác (DeepSeek, Qwen, v.v.)
+### Dùng model khác qua GenAI API (Gemini 2.5 Flash, v.v.)
 ```bash
-python main.py novel.txt -p my_project -m deepseek-r1:14b -g thriller
+python main.py novel.txt -p my_project -m gemini-2.5-flash -g thriller
 ```
 
 ### Chạy nhanh hơn (tắt glossary & summary)

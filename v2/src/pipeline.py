@@ -1,33 +1,28 @@
 """
-pipeline.py - Core translation engine.
+pipeline.py - Parallel translation engine using Google GenAI API (Gemma 4 31B IT).
 
-Flow per chunk:
+Flow per file:
   1. Detect source language (auto, first 2000 chars)
-  2. Build system prompt (base + source rules + genre hint + target language)
-  3. Build user message (context summary + glossary + characters + text)
-  4. Call Ollama → get translation
-  5. Clean output (strip thinking tags)
-  6. Extract summary for next chunk
-  7. Extract new glossary terms
-  8. Save checkpoint
-  9. Repeat
-
-Source language rules:
-  - EN: keep capitalized proper nouns; terms annotated in parens
-  - ZH: names → Hán-Việt; terms → MUST translate (no raw Chinese chars)
-  - JA: kanji names → Hán-Việt; katakana names → phonetic; terms → MUST translate
-  - KO: names → Hán-Việt or phonetic; terms → MUST translate (no hangul)
+  2. Pre-extract baseline glossary and characters from the first ~15,000 chars (1 API call)
+  3. Split text into chunks
+  4. Translate all chunks in parallel concurrently using asyncio.gather:
+     - For context, each chunk N receives the last ~1000 characters of the original text of chunk N-1.
+     - Each chunk uses the pre-extracted glossary and characters list.
+  5. Assemble translated parts in the correct order.
+  6. Save output and cleanup checkpoints.
 """
 
 import asyncio
 import json
+import os
 import re
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Optional
 
-import ollama
+from google import genai
+from google.genai.types import GenerateContentConfig
 import yaml
 
 from .chunker import chunk_text, get_chunk_stats
@@ -35,7 +30,9 @@ from .checkpoint_manager import CheckpointManager
 from .glossary_manager import GlossaryManager
 from .lang_detector import detect_source_language, get_source_lang_label
 
+import dotenv
 
+dotenv.load_dotenv()
 class TranslationPipeline:
     def __init__(
         self,
@@ -43,7 +40,7 @@ class TranslationPipeline:
         model: Optional[str] = None,
         genre: Optional[str] = None,
         target_lang: Optional[str] = None,
-        source_lang: Optional[str] = None,   # NEW: override auto-detect
+        source_lang: Optional[str] = None,   # override auto-detect
         output_dir: Optional[str] = None,
         chunk_size: Optional[int] = None,
         max_workers: Optional[int] = None,
@@ -73,16 +70,25 @@ class TranslationPipeline:
         self.checkpoint_mgr = CheckpointManager(project, self.settings['paths']['checkpoint_dir'])
         self.glossary_mgr   = GlossaryManager(project, genre_label, self.settings['paths']['data_dir'])
 
-        # Thread pool for blocking Ollama calls
+        # Thread pool for blocking API calls
         self.executor = ThreadPoolExecutor(max_workers=self.max_workers)
 
-        # Ollama model options
-        self.ollama_opts = {
-            'temperature':    self.settings['model']['temperature'],
-            'num_ctx':        self.settings['model']['num_ctx'],
-            'top_p':          self.settings['model']['top_p'],
-            'repeat_penalty': self.settings['model']['repeat_penalty'],
+        # API config options
+        self.model_opts = {
+            'temperature': self.settings['model'].get('temperature', 0.25),
+            'top_p':       self.settings['model'].get('top_p', 0.9),
         }
+
+        # Initialize Google GenAI client (requires GEMINI_API_KEY env var)
+        if not os.environ.get("GEMINI_API_KEY"):
+            raise ValueError(
+                "❌ Environment variable GEMINI_API_KEY is not set.\n"
+                "   Please set it using:\n"
+                "   PowerShell: $env:GEMINI_API_KEY='your_api_key'\n"
+                "   CMD: set GEMINI_API_KEY=your_api_key\n"
+                "   Linux/macOS: export GEMINI_API_KEY='your_api_key'"
+            )
+        self.client = genai.Client()
 
     # ------------------------------------------------------------------
     # Config helpers
@@ -106,16 +112,15 @@ class TranslationPipeline:
         key = f'source_rules_{source_lang}'
         return self.prompts.get(key, self.prompts.get('source_rules_en', '')).strip()
 
-
     @staticmethod
     def _safe_format(template: str, **kwargs) -> str:
         """
         Safe string substitution that won't choke on literal { } in prompt text
-        (e.g. JSON examples like {"key": "value"} inside the YAML prompts).
+        (e.g. JSON examples inside the YAML prompts).
         Only replaces {key} tokens that are in kwargs; leaves everything else alone.
         """
         for key, value in kwargs.items():
-            template = template.replace('{' + key + '}', str(value))
+            template = template.replace('txt' if key == 'text' else '{' + key + '}', str(value))
         return template
 
     # ------------------------------------------------------------------
@@ -145,15 +150,16 @@ class TranslationPipeline:
 
         if summary:
             tpl = self.prompts['context_section']
-            parts.append(self._safe_format(tpl, summary=summary).rstrip())
+            # Manual format to avoid JSON template braces issue
+            parts.append(tpl.replace('{summary}', summary).rstrip())
 
         if glossary_str:
             tpl = self.prompts['glossary_section']
-            parts.append(self._safe_format(tpl, terms=glossary_str).rstrip())
+            parts.append(tpl.replace('{terms}', glossary_str).rstrip())
 
         if characters_str:
             tpl = self.prompts['characters_section']
-            parts.append(self._safe_format(tpl, characters=characters_str).rstrip())
+            parts.append(tpl.replace('{characters}', characters_str).rstrip())
 
         prefix = '\n\n'.join(parts)
         if prefix:
@@ -163,23 +169,23 @@ class TranslationPipeline:
     # ------------------------------------------------------------------
     # LLM calls (blocking - run in executor)
     # ------------------------------------------------------------------
-    def _call_ollama(self, system: str, user: str, temperature: float = None) -> str:
-        opts = dict(self.ollama_opts)
-        if temperature is not None:
-            opts['temperature'] = temperature
+    def _call_genai(self, system: str, user: str, temperature: float = None) -> str:
+        temp = temperature if temperature is not None else self.model_opts['temperature']
+        top_p = self.model_opts['top_p']
 
-        response = ollama.chat(
+        response = self.client.models.generate_content(
             model=self.model,
-            messages=[
-                {'role': 'system', 'content': system},
-                {'role': 'user',   'content': user},
-            ],
-            options=opts,
+            contents=user,
+            config=GenerateContentConfig(
+                system_instruction=system,
+                temperature=temp,
+                top_p=top_p,
+            )
         )
-        raw = response['message']['content']
+        raw = response.text or ""
 
-        # Strip thinking tags (DeepSeek-R1, QwQ, Gemma reasoning mode, etc.)
-        if self.settings['features']['clean_thinking_tags']:
+        # Strip thinking tags (if any)
+        if self.settings['features'].get('clean_thinking_tags', True):
             raw = re.sub(r'<think>.*?</think>', '', raw, flags=re.DOTALL)
             raw = re.sub(r'<\|.*?\|>',         '', raw, flags=re.DOTALL)
 
@@ -195,53 +201,36 @@ class TranslationPipeline:
     ) -> str:
         system = self._build_system_prompt(source_lang)
         user   = self._build_user_message(chunk, summary, glossary_str, characters_str)
-        return self._call_ollama(system, user)
+        return self._call_genai(system, user)
 
-    def _extract_summary_sync(self, translated_chunk: str) -> str:
-        user = self._safe_format(self.prompts['summary_prompt'], text=translated_chunk[:2000])
-        try:
-            return self._call_ollama("", user, temperature=0.1)
-        except Exception:
-            return ""
-
-    def _extract_glossary_sync(self, original: str, translated: str) -> dict:
-        user = self._safe_format(
-            self.prompts['glossary_extraction_prompt'],
-            original=original[:800],
-            translated=translated[:800],
-        )
-        try:
-            raw   = self._call_ollama("", user, temperature=0.1)
-            match = re.search(r'\{.*\}', raw, re.DOTALL)
-            if match:
-                return json.loads(match.group())
-        except Exception:
-            pass
-        return {}
-
-    def _extract_characters_sync(self, text: str, source_lang: str) -> dict:
-        """
-        Extract characters with source-language-aware naming rules.
-        Passes source_lang so the prompt instructs correct romanisation/Hán-Việt.
-        """
+    def _pre_extract_glossary_and_characters_sync(self, text: str, source_lang: str) -> dict:
+        """Extract baseline glossary and characters from a text sample."""
+        # Use first 15000 characters as a representative sample
+        sample = text[:15000]
         lang_labels = {'en': 'English', 'zh': 'Tiếng Trung (Chinese)',
                        'ja': 'Tiếng Nhật (Japanese)', 'ko': 'Tiếng Hàn (Korean)'}
-        user = self._safe_format(
-            self.prompts['character_extraction_prompt'],
-            text=text[:1500],
-            source_lang=lang_labels.get(source_lang, source_lang),
-        )
+        user = self.prompts['pre_extract_prompt'].replace('{source_lang}', lang_labels.get(source_lang, source_lang)).replace('{text}', sample)
         try:
-            raw   = self._call_ollama("", user, temperature=0.1)
-            match = re.search(r'\{.*\}', raw, re.DOTALL)
+            raw = self._call_genai("", user, temperature=0.1)
+            # Strip markdown code blocks if any
+            clean_content = re.sub(r'```(?:json)?\s*(.*?)\s*```', r'\1', raw, flags=re.DOTALL)
+            match = re.search(r'\{.*\}', clean_content, re.DOTALL)
             if match:
                 return json.loads(match.group())
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"      ⚠️  Pre-extraction failed: {e}")
         return {}
 
+    def _parse_xml_output_only(self, response_text: str) -> str:
+        """Parses only the <translation> tag from the response."""
+        translation_match = re.search(r'<translation>(.*?)</translation>', response_text, re.DOTALL | re.IGNORECASE)
+        if translation_match:
+            return translation_match.group(1).strip()
+        # Fallback: remove XML tags if any, otherwise return raw
+        return re.sub(r'<.*?>', '', response_text, flags=re.DOTALL).strip()
+
     # ------------------------------------------------------------------
-    # Core: translate one file sequentially
+    # Core: translate one file
     # ------------------------------------------------------------------
     async def translate_file(self, input_path: Path, resume: bool = False) -> Path:
         text = input_path.read_text(encoding='utf-8')
@@ -262,100 +251,105 @@ class TranslationPipeline:
               f"max {stats['max_tokens']} tokens")
 
         # ── Resume from checkpoint ───────────────────────────────────
-        start_idx        = 0
-        translated_parts: list[str] = []
-        summary          = ""
+        translated_chunks: dict[int, str] = {}
 
         if resume:
             cp = self.checkpoint_mgr.load(input_path.stem)
             if cp:
-                start_idx        = cp['chunk_index'] + 1
-                translated_parts = cp['translated_parts']
-                summary          = cp.get('summary', '')
-                detected_lang    = cp.get('source_lang', detected_lang)  # restore from cp
-                if cp.get('glossary_terms'):
-                    self.glossary_mgr.update_terms(cp['glossary_terms'])
-                if cp.get('characters'):
-                    self.glossary_mgr.update_characters(cp['characters'])
-                print(f"   ▶️  Resuming from chunk {start_idx}/{total}")
+                if 'translated_chunks' in cp:
+                    # new dictionary format (keys are serialized as strings in JSON)
+                    translated_chunks = {int(k): v for k, v in cp['translated_chunks'].items()}
+                    detected_lang = cp.get('source_lang', detected_lang)
+                    if cp.get('glossary_terms'):
+                        self.glossary_mgr.update_terms(cp['glossary_terms'])
+                    if cp.get('characters'):
+                        self.glossary_mgr.update_characters(cp['characters'])
+                    print(f"   ▶️  Resuming progress: {len(translated_chunks)}/{total} chunks completed")
+                elif 'translated_parts' in cp:
+                    # backward compatibility with old list format
+                    for idx, part in enumerate(cp['translated_parts']):
+                        translated_chunks[idx] = part
+                    detected_lang = cp.get('source_lang', detected_lang)
+                    if cp.get('glossary_terms'):
+                        self.glossary_mgr.update_terms(cp['glossary_terms'])
+                    if cp.get('characters'):
+                        self.glossary_mgr.update_characters(cp['characters'])
+                    print(f"   ▶️  Resuming progress (list format): {len(translated_chunks)}/{total} chunks")
 
         loop = asyncio.get_event_loop()
 
-        # ── Extract characters from first chunk (if fresh start) ─────
-        if start_idx == 0 and not self.glossary_mgr.char_count():
-            chars = await loop.run_in_executor(
+        # ── Pre-extract glossary & characters ────────────────────────
+        if (not resume or not self.glossary_mgr.char_count()) and len(text) > 0:
+            print("   🔍 Pre-extracting baseline characters and glossary terms ... ", end='', flush=True)
+            pre_data = await loop.run_in_executor(
                 self.executor,
-                self._extract_characters_sync,
-                chunks[0],
+                self._pre_extract_glossary_and_characters_sync,
+                text,
                 detected_lang,
             )
-            if chars:
-                added = self.glossary_mgr.update_characters(chars)
-                print(f"   👥 Found {added} characters")
+            if pre_data:
+                terms_added = self.glossary_mgr.update_terms(pre_data.get('terms', {}))
+                chars_added = self.glossary_mgr.update_characters(pre_data.get('characters', {}))
+                print(f"✅ (Found {chars_added} characters, {terms_added} terms)")
+            else:
+                print("⚠️ (No data found or extraction failed)")
 
-        # ── Translate chunks ─────────────────────────────────────────
-        for i in range(start_idx, total):
-            chunk = chunks[i]
-            t0    = time.time()
-            print(f"   🔄 Chunk {i+1:03d}/{total} ... ", end='', flush=True)
+        # ── Translate chunks in parallel ─────────────────────────────
+        chunks_to_translate = [i for i in range(total) if i not in translated_chunks]
 
+        if chunks_to_translate:
+            # We use max_workers (or setting.yaml equivalent) for concurrent requests limit
+            print(f"   ⚡ Translating {len(chunks_to_translate)} chunks concurrently (workers: {self.max_workers}) ...")
+            
+            semaphore = asyncio.Semaphore(self.max_workers)
+            
             glossary_str   = self.glossary_mgr.format_terms_for_prompt()
             characters_str = self.glossary_mgr.format_characters_for_prompt()
 
-            translated = await loop.run_in_executor(
-                self.executor,
-                self._translate_chunk_sync,
-                chunk, summary, glossary_str, characters_str, detected_lang,
-            )
-            translated_parts.append(translated)
+            async def _translate_single_chunk(idx: int):
+                async with semaphore:
+                    t_start = time.time()
+                    chunk = chunks[idx]
 
-            elapsed = time.time() - t0
-            print(f"✅ ({elapsed:.1f}s)", flush=True)
+                    # Context: last 1000 characters of previous original text
+                    if idx > 0:
+                        prev_chunk = chunks[idx - 1]
+                        context_snippet = prev_chunk[-1000:]
+                    else:
+                        context_snippet = "(Đây là phần đầu của tác phẩm, không có bối cảnh trước)"
 
-            # ── Post-chunk: summary + glossary IN PARALLEL ──────────
-            do_summary  = self.settings['features']['auto_summary']
-            do_glossary = self.settings['features']['auto_glossary']
+                    raw_response = await loop.run_in_executor(
+                        self.executor,
+                        self._translate_chunk_sync,
+                        chunk,
+                        context_snippet,
+                        glossary_str,
+                        characters_str,
+                        detected_lang,
+                    )
 
-            if do_summary and do_glossary:
-                # Both enabled → run concurrently, saves ~40s per chunk
-                results = await asyncio.gather(
-                    loop.run_in_executor(self.executor, self._extract_summary_sync, translated),
-                    loop.run_in_executor(self.executor, self._extract_glossary_sync, chunk, translated),
-                    return_exceptions=True,
-                )
-                if not isinstance(results[0], Exception):
-                    summary = results[0]
-                if not isinstance(results[1], Exception) and results[1]:
-                    added = self.glossary_mgr.update_terms(results[1])
-                    if added:
-                        print(f"      📚 +{added} new glossary terms")
+                    translation = self._parse_xml_output_only(raw_response)
+                    translated_chunks[idx] = translation
 
-            elif do_summary:
-                summary = await loop.run_in_executor(
-                    self.executor, self._extract_summary_sync, translated
-                )
-            elif do_glossary:
-                new_terms = await loop.run_in_executor(
-                    self.executor, self._extract_glossary_sync, chunk, translated
-                )
-                if new_terms:
-                    added = self.glossary_mgr.update_terms(new_terms)
-                    if added:
-                        print(f"      📚 +{added} new glossary terms")
+                    # Thread-safe save checkpoint
+                    self.checkpoint_mgr.save(input_path.stem, {
+                        'total_chunks': total,
+                        'translated_chunks': {str(k): v for k, v in translated_chunks.items()},
+                        'source_lang': detected_lang,
+                        'glossary_terms': self.glossary_mgr.get_all(),
+                        'characters': self.glossary_mgr.get_characters(),
+                    })
 
-            # Checkpoint (includes source_lang for resume)
-            self.checkpoint_mgr.save(input_path.stem, {
-                'chunk_index':    i,
-                'total_chunks':   total,
-                'translated_parts': translated_parts,
-                'summary':        summary,
-                'source_lang':    detected_lang,
-                'glossary_terms': self.glossary_mgr.get_all(),
-                'characters':     self.glossary_mgr.get_characters(),
-            })
+                    elapsed = time.time() - t_start
+                    print(f"      ✅ Chunk {idx+1:03d}/{total} completed in {elapsed:.1f}s")
+
+            # Gather all translation tasks
+            tasks = [_translate_single_chunk(idx) for idx in chunks_to_translate]
+            await asyncio.gather(*tasks)
 
         # ── Assemble & save output ───────────────────────────────────
-        final_text  = '\n\n'.join(translated_parts)
+        final_parts = [translated_chunks[i] for i in range(total)]
+        final_text  = '\n\n'.join(final_parts)
         lang_suffix = f"_{self.target_lang}"
         output_path = self.output_dir / f"{input_path.stem}{lang_suffix}{input_path.suffix}"
         output_path.write_text(final_text, encoding='utf-8')
@@ -368,7 +362,8 @@ class TranslationPipeline:
         self.checkpoint_mgr.delete(input_path.stem)
 
         print(f"   ✨ Done → {output_path.name}")
-        print(f"   📚 Glossary: {self.glossary_mgr.term_count()} terms saved")
+        print(f"   📚 Glossary: {self.glossary_mgr.term_count()} terms | "
+              f"👥 Characters: {self.glossary_mgr.char_count()} tracked")
 
         return output_path
 

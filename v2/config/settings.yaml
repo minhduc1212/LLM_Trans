@@ -3,9 +3,7 @@ features:
   auto_summary: true
   clean_thinking_tags: true
 model:
-  name: gemma4:e4b
-  num_ctx: 8192
-  repeat_penalty: 1.1
+  name: gemma-4-31b-it
   temperature: 0.25
   top_p: 0.9
 paths:

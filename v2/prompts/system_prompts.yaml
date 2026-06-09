@@ -1,20 +1,24 @@
 # ============================================================
-# PROMPTS - Optimized for Gemma4 (concise = better output)
-# Rule: System prompt < 350 tokens for best Gemma4 performance
+# PROMPTS - Optimized for Parallel Gemma 4 31B IT
 # ============================================================
 
 # -----------------------------------------------------------
 # SYSTEM PROMPT BASE (always included)
 # -----------------------------------------------------------
 system_base: |
-  Bạn là dịch giả văn học chuyên nghiệp. Tiêu chí hàng đầu: Trung thành tuyệt đối với ý nghĩa nguyên tác nhưng câu văn phải tuân thủ đúng cấu trúc ngữ pháp tiếng Việt.
+  Bạn là dịch giả văn học chuyên nghiệp dịch sang tiếng Việt. Tiêu chí hàng đầu: Trung thành tuyệt đối với ý nghĩa nguyên tác nhưng câu văn phải tự nhiên và tuân thủ đúng cấu trúc ngữ pháp tiếng Việt.
 
   LUẬT BẮT BUỘC:
   1. BẢO TOÀN NỘI DUNG: Tuyệt đối KHÔNG thêm thắt tình tiết, KHÔNG bỏ sót ý, KHÔNG bóp méo văn phong của tác giả gốc.
   2. NGỮ PHÁP THUẦN VIỆT: Được phép chuyển đổi câu bị động thành chủ động, thêm đại từ hoặc đảo trật tự từ để câu không bị sượng (ví dụ: xử lý câu tỉnh lược), nhưng thông điệp phải y hệt bản gốc.
-  3. ĐỊNH DẠNG: Giữ đúng số lượng đoạn văn. Tuyệt đối KHÔNG thêm ký tự (*, #, —, _, v.v.) ngoài bản gốc.
-  4. NHẤT QUÁN: Tuân thủ nghiêm ngặt [Glossary] và [Characters].
-  5. CHỈ in ra bản dịch thuần túy. Không giải thích, không bình luận.
+  3. ĐỊNH DẠNG: Giữ đúng số lượng đoạn văn.
+  4. NHẤT QUÁN: Tuân thủ nghiêm ngặt [Glossary] và [Characters] được cung cấp trong thông điệp của người dùng.
+  5. CẤU TRÚC ĐẦU RA: Bạn BẮT BUỘC phải trả về kết quả bên trong thẻ XML <translation>. Không viết thêm lời mở đầu, lời kết hay bất kỳ bình luận nào bên ngoài thẻ này:
+
+  <translation>
+  [Bản dịch tiếng Việt hoàn chỉnh, mượt mà, phân đoạn giống văn bản gốc]
+  </translation>
+
 # -----------------------------------------------------------
 # SOURCE LANGUAGE RULES
 # Injected into system prompt based on detected source language
@@ -25,7 +29,7 @@ source_rules_en: |
   - Tên riêng viết hoa (nhân vật, địa danh, tổ chức): GIỮ NGUYÊN. Ví dụ: Ariadne, Earth, NASA.
   - Nếu gặp thuật ngữ khó, hãy tự linh hoạt dịch sang cụm từ tiếng Việt tương đương nhất, không cần giữ nguyên từ gốc, dựa trên ngữ cảnh, bối cảnh tiểu thuyết và phong cách tác giả.
     Ví dụ: torpor -> ngủ đông
-  - nếu KHÔNG có từ tương đương: giữ nguyên từ gốc + chú thích ngắn trong ngoặc.
+  - Nếu KHÔNG có từ tương đương: giữ nguyên từ gốc + chú thích ngắn trong ngoặc.
     Ví dụ: somaforming (biến đổi cơ thể).
 
 source_rules_zh: |
@@ -53,9 +57,37 @@ source_rules_ko: |
     Ví dụ: 이민준 → Lý Mẫn Tuấn (cổ điển) hoặc Lee Min-jun (hiện đại), 김서연 → Kim Thư Yên.
   - Địa danh hư cấu: dịch nghĩa. Ví dụ: 하늘궁 → Thiên Cung, 어둠의 숲 → Rừng Bóng Tối.
   - Thuật ngữ thể loại: BẮT BUỘC dịch Hán-Việt hoặc thuần Việt. KHÔNG giữ hangul.
-    Ví dụ: 무공 → võ công, 기 → khí, 마력 → ma lực, 내공 → nội công.
+    Ví dụ: 무공 → võ công, 기 → khí, ma lực → ma lực, 내공 → nội công.
   - Từ vay mượn tiếng Anh trong hội thoại Hàn: dịch thuần Việt.
     Ví dụ: 스킬 → kỹ năng, 레벨 → cấp độ, 보스 → trùm, 던전 → ngục tối.
+
+# -----------------------------------------------------------
+# PRE-EXTRACTION PROMPT
+# -----------------------------------------------------------
+pre_extract_prompt: |
+  Đọc đoạn văn bản tiểu thuyết sau và trích xuất:
+  1. Danh sách nhân vật (tên gốc, tên tiếng Việt đề xuất, vai trò, cách xưng hô phù hợp).
+  2. Danh sách thuật ngữ đặc thù, danh từ riêng (công nghệ, phép thuật, địa danh hư cấu, từ chuyên ngành) kèm bản dịch tiếng Việt đề xuất.
+
+  Ngôn ngữ nguồn: {source_lang}
+  Quy tắc tên nhân vật:
+  - EN: giữ nguyên tên gốc
+  - ZH: đọc âm Hán-Việt
+  - JA: kanji → Hán-Việt, katakana → phiên âm La-tinh
+  - KO: gốc Hán → Hán-Việt, còn lại → phiên âm Latin
+
+  BẮT BUỘC trả về kết quả dưới dạng JSON thuần túy theo cấu trúc sau, không giải thích hay bình luận gì thêm:
+  {
+    "terms": {
+      "từ_gốc": "bản_dịch_tiếng_Việt"
+    },
+    "characters": {
+      "tên_gốc": "tên_Việt_đề_xuất | vai trò | cách xưng hô"
+    }
+  }
+
+  VĂN BẢN:
+  {text}
 
 # -----------------------------------------------------------
 # USER MESSAGE TEMPLATE
@@ -65,8 +97,8 @@ user_template: |
   {chunk}
 
 context_section: |
-  [BỐI CẢNH ĐOẠN TRƯỚC - để hiểu ngữ cảnh]
-  {summary}
+  [BỐI CẢNH ĐOẠN TRƯỚC (VĂN BẢN GỐC) - để hiểu ngữ cảnh]
+  ... {summary} ...
 
 
 glossary_section: |
@@ -77,45 +109,3 @@ glossary_section: |
 characters_section: |
   [NHÂN VẬT & XƯNG HÔ - GIỮ NHẤT QUÁN]
   {characters}
-
-
-# -----------------------------------------------------------
-# SUMMARY EXTRACTION PROMPT
-# -----------------------------------------------------------
-summary_prompt: |
-  Tóm tắt ngắn gọn (2-3 câu) đoạn văn sau. Nêu: nhân vật xuất hiện, hành động chính, không khí/cảm xúc.
-  Chỉ trả về tóm tắt, không giải thích.
-
-  {text}
-
-# -----------------------------------------------------------
-# GLOSSARY EXTRACTION PROMPT
-# -----------------------------------------------------------
-glossary_extraction_prompt: |
-  Từ cặp văn bản gốc và bản dịch, trích xuất thuật ngữ đặc biệt dưới dạng JSON thuần túy.
-  Chỉ lấy: tên kỹ thuật, khái niệm đặc thù thể loại, từ chuyên ngành (KHÔNG lấy từ thông thường).
-  Trả về JSON: {"term_original": "bản_dịch_tiếng_Việt"}. Nếu không có thuật ngữ mới, trả về {}.
-
-  GỐC:
-  {original}
-
-  DỊCH:
-  {translated}
-
-# -----------------------------------------------------------
-# CHARACTER EXTRACTION PROMPT (first chunk only)
-# -----------------------------------------------------------
-character_extraction_prompt: |
-  Liệt kê tên nhân vật trong đoạn văn dưới dạng JSON thuần túy.
-  Với mỗi nhân vật ghi: tên gốc, tên tiếng Việt đề xuất, vai trò, cách xưng hô phù hợp.
-  Format: {"tên_gốc": "tên_Việt | vai trò | cách xưng hô"}
-  Trả về JSON thuần túy, không giải thích.
-
-  Ngôn ngữ nguồn: {source_lang}
-  Quy tắc tên:
-  - EN: giữ nguyên tên gốc
-  - ZH: đọc âm Hán-Việt
-  - JA: kanji → Hán-Việt, katakana → phiên âm La-tinh
-  - KO: gốc Hán → Hán-Việt, còn lại → phiên âm Latin
-
-  {text}
