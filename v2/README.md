@@ -144,6 +144,12 @@ Sửa `config/genres.yaml` → `genres:` thêm entry mới.
 | `xianxia` | Tiên hiệp | Tu luyện, cảnh giới, linh khí |
 | `wuxia` | Võ hiệp | Giang hồ, võ công, hào sảng |
 | `isekai` | Isekai | Game system, kỹ năng, cấp độ |
+| `xuanhuan` | Huyền huyễn | Tu luyện cổ điển đan xen kỳ ảo phương Tây |
+| `urban` | Đô thị | Bối cảnh hiện đại, đời thường, tự nhiên |
+| `system` | Hệ thống | Bảng chỉ số, nhiệm vụ game, võng du |
+| `romcom` | Romcom | Hài hước lãng mạn, học đường tinh nghịch |
+| `apocalypse` | Mạt thế | Tận thế, zombie, sinh tồn kịch tính |
+| `mystery` | Trinh thám | Phá án, bí ẩn, suy luận logic |
 
 ---
 

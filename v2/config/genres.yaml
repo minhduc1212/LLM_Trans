@@ -54,6 +54,36 @@ genres:
     hint: "Hệ thống game, chỉ số, kỹ năng. Giữ tinh thần nhẹ nhàng hoặc nghiêm túc theo ngữ cảnh."
     term_categories: ["kỹ năng", "cấp độ", "chỉ số", "hệ thống", "lớp nhân vật"]
 
+  xuanhuan:
+    label: "Huyền huyễn"
+    hint: "Kết hợp tu luyện cổ điển và yếu tố kỳ ảo phương Tây. Phong thái hào hùng, bá đạo, thuật ngữ võ học/phép thuật đan xen."
+    term_categories: ["công pháp", "huyết thống", "linh thú", "vũ khí", "bí cảnh"]
+
+  urban:
+    label: "Đô thị / Hiện đại"
+    hint: "Bối cảnh hiện đại. Xưng hô tự nhiên, đời thường, ngôn ngữ gần gũi. Tránh từ Hán-Việt quá cổ trang."
+    term_categories: ["chức danh", "địa danh hiện đại", "biệt danh", "tiếng lóng"]
+
+  system:
+    label: "Hệ thống / Võng du"
+    hint: "Giao diện trò chơi, bảng chỉ số, nhiệm vụ, phần thưởng. Dịch thuật ngữ game chuẩn xác và mượt mà."
+    term_categories: ["nhiệm vụ", "chỉ số", "vật phẩm", "danh hiệu"]
+
+  romcom:
+    label: "Romcom / Học đường"
+    hint: "Hài hước lãng mạn, thanh xuân học đường. Văn phong nhẹ nhàng, tươi trẻ, hội thoại tự nhiên, tinh nghịch."
+    term_categories: ["học đường", "biệt danh", "tình cảm", "tiếng lóng học sinh"]
+
+  apocalypse:
+    label: "Mạt thế / Sinh tồn"
+    hint: "Thế giới tận thế, zombie, biến dị. Không khí u ám, kịch tính, khốc liệt. Kỹ năng sinh tồn."
+    term_categories: ["biến dị", "zombie", "căn cứ", "kỹ năng sinh tồn"]
+
+  mystery:
+    label: "Trinh thám / Bí ẩn"
+    hint: "Nhịp điệu chậm rãi, kịch tính, suy luận logic. Chú trọng mô tả chi tiết, hiện trường, tạo cảm giác tò mò."
+    term_categories: ["manh mối", "hiện trường", "tội phạm", "thuật ngữ pháp y"]
+
 # Target language configs
 languages:
   vi:

@@ -33,7 +33,8 @@ from src.checkpoint_manager import CheckpointManager
 
 GENRES = [
     'scifi', 'fantasy', 'romance', 'thriller',
-    'historical', 'horror', 'default', 'xianxia', 'wuxia', 'isekai'
+    'historical', 'horror', 'default', 'xianxia', 'wuxia', 'isekai',
+    'xuanhuan', 'urban', 'system', 'romcom', 'apocalypse', 'mystery'
 ]
 
 LANGUAGES = ['vi', 'zh', 'en', 'ja', 'ko', 'id']
