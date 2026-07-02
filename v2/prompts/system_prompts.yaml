@@ -34,7 +34,10 @@ source_rules_en: |
 
 source_rules_zh: |
   QUY TẮC NGUỒN (Tiếng Trung):
-  - Tên nhân vật (chữ Hán): đọc âm Hán-Việt. Ví dụ: 李明 → Lý Minh, 陈晓 → Trần Hiểu.
+  - Tên nhân vật:
+    + Nếu là tên Trung Quốc thuần túy (chữ Hán): đọc âm Hán-Việt. Ví dụ: 李明 → Lý Minh, 陈晓 → Trần Hiểu.
+    + Nếu là tên tiếng Anh/phương Tây viết bằng ký tự Latin: GIỮ NGUYÊN dạng tiếng Anh. Ví dụ: Emily → Emily, John → John.
+    + Nếu là tên tiếng Anh/phương Tây được phiên âm sang chữ Hán: BẮT BUỘC dịch ngược lại tên tiếng Anh/phương Tây gốc tương ứng, KHÔNG dịch Hán-Việt. Ví dụ: 艾米丽 → Emily (không dịch thành Ngải Mễ Lệ), 亚历山大 → Alexander (không dịch thành Á Lịch Sơn Đại), 约翰 → John (không dịch thành Ước Hàn).
   - Địa danh hư cấu: dịch nghĩa Hán-Việt. Ví dụ: 天武城 → Thiên Vũ Thành, 玄冰谷 → Huyền Băng Cốc.
   - Địa danh thực tế: dùng tên Việt thông dụng (Bắc Kinh, Thượng Hải).
   - Thuật ngữ thể loại: BẮT BUỘC dịch Hán-Việt hoặc thuần Việt. KHÔNG giữ chữ Hán.
@@ -72,7 +75,7 @@ pre_extract_prompt: |
   Ngôn ngữ nguồn: {source_lang}
   Quy tắc tên nhân vật:
   - EN: giữ nguyên tên gốc
-  - ZH: đọc âm Hán-Việt
+  - ZH: tên Trung Quốc thuần → Hán-Việt; tên tiếng Anh/Latin → giữ nguyên; tên tiếng Anh phiên âm chữ Hán (như 艾米丽, 亚历山大, 约翰) → bắt buộc chuyển ngược về tên tiếng Anh gốc tương ứng (như Emily, Alexander, John) chứ không dịch Hán-Việt.
   - JA: kanji → Hán-Việt, katakana → phiên âm La-tinh
   - KO: gốc Hán → Hán-Việt, còn lại → phiên âm Latin
 

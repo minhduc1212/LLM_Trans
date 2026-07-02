@@ -1,7 +1,15 @@
+concurrency:
+  max_concurrent_requests: 4
+  use_global_semaphore: true
 features:
   auto_glossary: true
   auto_summary: true
   clean_thinking_tags: true
+  detect_duplicate_translation: true
+  inject_glossary_in_system_prompt: true
+  relevance_filtering: true
+  rolling_history: true
+  use_async_client: true
 model:
   name: gemma-4-31b-it
   temperature: 0.25
@@ -10,8 +18,19 @@ paths:
   checkpoint_dir: checkpoints
   data_dir: data
   output_dir: output
+retry:
+  exponential_base: 2.0
+  initial_delay: 2.0
+  jitter: true
+  max_delay: 60.0
+  max_retries: 5
 translation:
   chunk_size: 2500
+  duplicate_threshold: 0.85
   genre: default
+  history_chapters: 2
+  history_token_budget: 4000
+  lazy_threshold: 0.75
   max_workers: 2
+  similarity_lookback: 2
   target_language: vi
