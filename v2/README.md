@@ -105,4 +105,4 @@ translation:
   similarity_lookback: 2               # Số chunk liền trước để so khớp trùng lặp
 ```
 
-*Để biết thêm chi tiết về thiết kế luồng xử lý và cách hoạt động của từng hàm, vui lòng đọc tệp [DOC.md](file:///D:/LT/LLM%20Trans/v2/DOC.md).*
+*Để biết thêm chi tiết về thiết kế luồng xử lý và cách hoạt động của từng hàm, vui lòng đọc tệp [DOC.md](./DOC.md).*
