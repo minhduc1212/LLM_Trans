@@ -13,7 +13,8 @@ system_base: |
   2. NGỮ PHÁP THUẦN VIỆT: Được phép chuyển đổi câu bị động thành chủ động, thêm đại từ hoặc đảo trật tự từ để câu không bị sượng (ví dụ: xử lý câu tỉnh lược), nhưng thông điệp phải y hệt bản gốc.
   3. ĐỊNH DẠNG: Giữ đúng số lượng đoạn văn.
   4. NHẤT QUÁN: Tuân thủ nghiêm ngặt [Glossary] và [Characters] được cung cấp trong thông điệp của người dùng.
-  5. CẤU TRÚC ĐẦU RA: Bạn BẮT BUỘC phải trả về kết quả bên trong thẻ XML <translation>. Không viết thêm lời mở đầu, lời kết hay bất kỳ bình luận nào bên ngoài thẻ này:
+  5. CẤU TRÚC ĐẦU RA: Bạn BẮT BUỘC phải trả về kết quả bên trong thẻ XML <translation>. Không viết thêm lời mở đầu, lời kết hay bất kỳ bình luận nào bên ngoài thẻ này.
+  6. KHÔNG LỌT TIẾNG NƯỚC NGOÀI: Bản dịch đầu ra BẮT BUỘC phải viết 100% bằng tiếng Việt chuẩn. Tuyệt đối KHÔNG sử dụng các từ liên từ tiếng Anh (như "But", "And", "So", "However",...) hay bất kỳ từ tiếng Anh/ngoại ngữ nào khác trong câu dịch, trừ phi đó là các danh từ riêng được yêu cầu giữ nguyên dạng Latin theo [Glossary] hoặc [Characters].
 
   <translation>
   [Bản dịch tiếng Việt hoàn chỉnh, mượt mà, phân đoạn giống văn bản gốc]
@@ -40,9 +41,10 @@ source_rules_zh: |
     + Nếu là tên tiếng Anh/phương Tây được phiên âm sang chữ Hán: BẮT BUỘC dịch ngược lại tên tiếng Anh/phương Tây gốc tương ứng, KHÔNG dịch Hán-Việt. Ví dụ: 艾米丽 → Emily (không dịch thành Ngải Mễ Lệ), 亚历山大 → Alexander (không dịch thành Á Lịch Sơn Đại), 约翰 → John (không dịch thành Ước Hàn).
   - Địa danh hư cấu: dịch nghĩa Hán-Việt. Ví dụ: 天武城 → Thiên Vũ Thành, 玄冰谷 → Huyền Băng Cốc.
   - Địa danh thực tế: dùng tên Việt thông dụng (Bắc Kinh, Thượng Hải).
-  - Thuật ngữ thể loại: BẮT BUỘC dịch Hán-Việt hoặc thuần Việt. KHÔNG giữ chữ Hán.
+  - Thuật ngữ thể loại: BẮT BUỘC dịch Hán-Việt hoặc thuần Việt sao cho tự nhiên, thoát ý và hợp lý nhất với văn phong Việt Nam. KHÔNG dịch Hán-Việt thô cứng từng chữ một nếu có phương án tự nhiên và chính xác hơn. KHÔNG giữ chữ Hán.
     Ví dụ: 斗气 → đấu khí, 灵力 → linh lực, 境界 → cảnh giới, 魂环 → hồn hoàn,
     天道 → thiên đạo, 元神 → nguyên thần, 丹药 → đan dược.
+    Đặc biệt, các chức danh/danh từ như `主宰` nên dịch là `Chúa Tể` (thay vì Chủ Tể), `古皇主宰` dịch thành `Cổ Hoàng Chúa Tể` hoặc `Chúa Tể Cổ Hoàng`; `末土` dịch là `Vùng đất chết` hoặc `Vùng đất hoang tàn` (thay vì Mạt Thổ).
   - Nếu không có Hán-Việt tương đương: tạo cụm thuần Việt + ghi gốc trong ngoặc.
 
 source_rules_ja: |
@@ -78,6 +80,10 @@ pre_extract_prompt: |
   - ZH: tên Trung Quốc thuần → Hán-Việt; tên tiếng Anh/Latin → giữ nguyên; tên tiếng Anh phiên âm chữ Hán (như 艾米丽, 亚历山大, 约翰) → bắt buộc chuyển ngược về tên tiếng Anh gốc tương ứng (như Emily, Alexander, John) chứ không dịch Hán-Việt.
   - JA: kanji → Hán-Việt, katakana → phiên âm La-tinh
   - KO: gốc Hán → Hán-Việt, còn lại → phiên âm Latin
+
+  Quy tắc dịch thuật ngữ (terms):
+  - Dịch thoát ý, tự nhiên và hợp lý theo ngữ cảnh Việt Nam, KHÔNG dịch Hán-Việt thô cứng từng chữ một.
+  - Ví dụ: `主宰` → `Chúa Tể` (thay vì Chủ Tể), `古皇主宰` → `Cổ Hoàng Chúa Tể` hoặc `Chúa Tể Cổ Hoàng`, `末土` → `Vùng đất hoang tàn` hoặc `Vùng đất chết` (thay vì Mạt Thổ).
 
   BẮT BUỘC trả về kết quả dưới dạng JSON thuần túy theo cấu trúc sau, không giải thích hay bình luận gì thêm:
   {

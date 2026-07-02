@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Optional
 
 from google import genai
+from google.genai import types
 from google.genai.types import GenerateContentConfig
 from google.genai.errors import APIError
 import yaml
@@ -221,7 +222,7 @@ class TranslationPipeline:
 
         genre_cfg   = self.genres_cfg['genres'].get(self.genre, {})
         genre_hint  = (f"Thể loại: {genre_cfg.get('label', self.genre)}. "
-                       f"{genre_cfg.get('hint', '')}")
+                    f"{genre_cfg.get('hint', '')}")
 
         lang_cfg         = self.genres_cfg['languages'].get(self.target_lang, {})
         lang_instruction = lang_cfg.get('instruction', f'Translate to {self.target_lang}.')
@@ -276,6 +277,25 @@ class TranslationPipeline:
         
         use_async = self.settings['features'].get('use_async_client', True)
 
+        safety_settings = [
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_HATE_SPEECH,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
+            ),
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_HARASSMENT,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
+            ),
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
+            ),
+            types.SafetySetting(
+                category=types.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold=types.HarmBlockThreshold.BLOCK_NONE,
+            ),
+        ]
+
         try:
             if use_async:
                 response = await self.client.aio.models.generate_content(
@@ -285,6 +305,7 @@ class TranslationPipeline:
                         system_instruction=system,
                         temperature=temp,
                         top_p=top_p,
+                        safety_settings=safety_settings,
                     )
                 )
             else:
@@ -298,6 +319,7 @@ class TranslationPipeline:
                         system_instruction=system,
                         temperature=temp,
                         top_p=top_p,
+                        safety_settings=safety_settings,
                     )
                 )
         except APIError as e:
@@ -857,7 +879,7 @@ class TranslationPipeline:
 
         print(f"   ✨ Done → {output_path.name}")
         print(f"   📚 Glossary: {self.glossary_mgr.term_count()} terms | "
-              f"👥 Characters: {self.glossary_mgr.char_count()} tracked")
+            f"👥 Characters: {self.glossary_mgr.char_count()} tracked")
 
         return output_path
 
